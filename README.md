@@ -12,91 +12,71 @@ verify service operation, and validate external port accessibility.
 - Cloud Provider: Hetzner Cloud
 - Server Type: CPX22
 - Operating System: Ubuntu 22.04
-- Access Method: SSH (PuTTY)
+- Access Method: SSH
 - Port Tested: 443 (HTTPS)
 
 ---
 
-## Recovery Steps
+## Recovery Process
 
-### 1. Identifying Public IP
-Checked networking configuration in Hetzner Console to obtain the public IPv4 address used for SSH access and validation.
+### Identifying Public IP
+The public IPv4 address of the server was obtained from the Hetzner Cloud Console. 
+This address was used for SSH access and external connectivity validation.
 
-### 2. SSH Key Generation
-Generated an SSH key pair using PuTTYgen.
-Uploaded the public key to Hetzner and stored the private key locally.
+### SSH Key Generation
+An SSH key pair was generated. The public key was uploaded to Hetzner, 
+while the private key was securely stored locally for authentication.
 
-### 3. Enabling Rescue Mode
-Activated Rescue System in Hetzner.
-Performed a power cycle and logged into the rescue environment as root.
+### Enabling Rescue Mode
+The Rescue System was activated from the Hetzner panel. 
+The server was rebooted into a temporary recovery environment to restore access.
 
-### 4. Mounting the Main System
-Mounted the main disk partition:
+### Mounting the Main System
+The primary disk partition of the original operating system was mounted 
+inside the rescue environment to access and modify system files.
 
-lsblk
-mount /dev/sda1 /mnt
-
-Accessed the original filesystem structure.
-
-### 5. Restoring SSH Access
-Created SSH directory and authorized_keys file:
-
-mkdir -p /mnt/root/.ssh
-touch /mnt/root/.ssh/authorized_keys
-chmod 600 /mnt/root/.ssh/authorized_keys
-
-Inserted the public SSH key and rebooted the server.
-
-Result: SSH access restored via key-based authentication.
+### Restoring SSH Access
+A secure SSH key-based authentication setup was configured manually 
+inside the original system. After rebooting, access via SSH key was successfully restored.
 
 ---
 
 ## Service Validation
 
-Checked service status:
+After restoring access, the server booted into the main Ubuntu system. 
+The service was verified to be active, enabled, and running correctly. 
+It was confirmed that the application was properly bound to port 443 
+and listening for incoming connections.
 
-systemctl status <service-name>
-
-Verified listening port:
-
-ss -tulpn | grep 443
-
-Checked service logs:
-
-journalctl -u <service-name> -f
+System logs were reviewed to ensure there were no critical runtime errors.
 
 ---
 
 ## External Port Validation
 
-From local machine (PowerShell):
-
-Test-NetConnection <SERVER_IP> -Port 443
-
-Result:
-TcpTestSucceeded : True
-
-Confirmed that port 443 is publicly accessible.
+External connectivity was tested from a local machine to confirm 
+that port 443 was publicly accessible. The successful connection 
+confirmed that the service was reachable from the internet 
+and not blocked by firewall or network restrictions.
 
 ---
 
 ## Final Result
 
 - SSH access successfully restored
-- Server booted into normal mode
+- Server operating in normal mode
 - Service running and enabled
 - Port 443 publicly accessible
-- No critical errors in logs
+- No critical errors detected
 
 ---
 
 ## Skills Demonstrated
 
 - Linux system recovery
-- Disk mounting in rescue environment
-- SSH key-based authentication setup
-- systemd service management
-- Network socket inspection
-- External connectivity validation
 - Cloud infrastructure troubleshooting
+- SSH key-based authentication configuration
+- Service validation and monitoring
+- Network accessibility verification
+- Secure server configuration
 """
